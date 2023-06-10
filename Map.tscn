@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://rjn5qt7k8ifk"]
+
+[ext_resource type="Script" path="res://Map.cs" id="1"]
+[ext_resource type="Script" path="res://NetImage.cs" id="2"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ptg2m"]
+size = Vector2(2, 2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_0w6kt"]
+properties/0/path = NodePath("Image:hash")
+properties/0/spawn = true
+properties/0/sync = false
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/sync = false
+properties/2/path = NodePath("Image:scale")
+properties/2/spawn = true
+properties/2/sync = false
+properties/3/path = NodePath("Fog:scale")
+properties/3/spawn = true
+properties/3/sync = false
+
+[node name="Map" type="Node2D" node_paths=PackedStringArray("image", "fog")]
+script = ExtResource("1")
+image = NodePath("Image")
+fog = NodePath("Fog")
+
+[node name="Fog" type="Polygon2D" parent="."]
+scale = Vector2(2, 2)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(0, 0, 1, 0, 1, 1, 0, 1)
+
+[node name="Image" type="Sprite2D" parent="."]
+z_index = -2
+texture = SubResource("PlaceholderTexture2D_ptg2m")
+centered = false
+script = ExtResource("2")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_0w6kt")

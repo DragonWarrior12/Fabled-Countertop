@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://c7nn2i2h0jncu"
+path="res://.godot/imported/blankMap.png-304dfae9a1a6a384fabab79e22023e0a.image"
+
+[deps]
+
+source_file="res://blankMap.png"
+dest_files=["res://.godot/imported/blankMap.png-304dfae9a1a6a384fabab79e22023e0a.image"]
+
+[params]
+

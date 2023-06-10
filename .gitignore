@@ -1,0 +1,7 @@
+.import/
+doc/*.import
+export.cfg
+export_presets.cfg
+*.translation
+
+

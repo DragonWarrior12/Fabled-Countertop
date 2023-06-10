@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://cjoy6sw1o3ar4"]
+
+[ext_resource type="Script" path="res://LoadMapButton.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://rjn5qt7k8ifk" path="res://Map.tscn" id="2"]
+[ext_resource type="Script" path="res://SpawnEntityButton.gd" id="3_s5p1l"]
+[ext_resource type="PackedScene" uid="uid://dfkski40c56ab" path="res://entity.tscn" id="4_krbwb"]
+
+[node name="CountertopUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="LoadMap" type="Button" parent="."]
+layout_mode = 0
+offset_right = 12.0
+offset_bottom = 20.0
+text = "Load Map"
+script = ExtResource("1")
+map = ExtResource("2")
+
+[node name="SpawnEntity" type="Button" parent="."]
+layout_mode = 0
+offset_left = 85.0
+offset_right = 169.0
+offset_bottom = 31.0
+text = "Spawn Entity"
+script = ExtResource("3_s5p1l")
+entity = ExtResource("4_krbwb")
