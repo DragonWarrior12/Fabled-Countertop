@@ -15,12 +15,18 @@ public partial class NetImage : Sprite2D
     static Dictionary<string, UserImage> textures = new Dictionary<string, UserImage>();
     [Export]
     string hash;
+    int source = 1;
     public Action Loaded;
     public Action<string> FileSelected;
+    [Export]
+    public Node placeholder;
 
     public override void _Ready()
     {
-        
+        if (placeholder == null) return;
+        Action removePlaceholder = () => placeholder.QueueFree();
+        removePlaceholder += () => Loaded -= removePlaceholder;
+        Loaded += removePlaceholder;
     }
 
     public void AddImageSubmenu(RightClickable clickable)
@@ -31,6 +37,9 @@ public partial class NetImage : Sprite2D
 
         submenu.AddItem("Load", FunctionIDs.LoadImage);
         clickable.actions.Add(FunctionIDs.LoadImage, OpenDialog);
+
+        submenu.AddItem("Sync", FunctionIDs.SyncImage);
+        clickable.actions.Add(FunctionIDs.SyncImage, () => RpcId(source, "RpcRequestImage", hash));
 
         clickable.AddSubmenu("Image", submenu);
     }

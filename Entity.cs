@@ -6,10 +6,13 @@ public partial class Entity : RightClickable
     public bool dragging { get; private set;}
 	[Export]
 	NetImage image;
+	public Attributes attributes;
 
 	public override void _Ready()
 	{
+		attributes = new Attributes();
 		image.AddImageSubmenu(this);
+		image.Loaded += ScaleImage;
 	}
 
 	public override void _Process(double delta)
@@ -17,9 +20,14 @@ public partial class Entity : RightClickable
 		
 	}
 
+	public void ScaleImage()
+	{
+		image.Scale = image.Texture.GetSize().Inverse() * 100 * attributes.size;
+	}
+
 	public override void _Input(InputEvent _event)
 	{
-		if (MakeInputLocal(_event) is InputEventMouseButton mouseEvent) {
+		if (image.MakeInputLocal(_event) is InputEventMouseButton mouseEvent) {
 			if (mouseEvent.ButtonIndex == MouseButton.Left) {
 				if (!dragging && mouseEvent.Pressed)
 				{
@@ -31,7 +39,7 @@ public partial class Entity : RightClickable
 				if (dragging && !mouseEvent.Pressed)
 				{
 					dragging = false;
-					Position = ((Position - Scale / 2) / 100).Round() * 100 - (Vector2.One * (Scale.X - 1));
+					if (!Input.IsKeyPressed(Key.Shift)) Position = Snap(Position);
 					GetViewport().SetInputAsHandled();
 				}
 			} else if (mouseEvent.ButtonIndex == MouseButton.Right) {
@@ -45,7 +53,7 @@ public partial class Entity : RightClickable
 		{
 			if (_event is InputEventMouseMotion motionEvent && dragging && !Player.singleton.dragging)
 			{
-				Position += motionEvent.Relative;
+				Position += GetViewportTransform().AffineInverse().BasisXform(motionEvent.Relative);
 			}
 		}
 	}
@@ -69,5 +77,5 @@ public partial class Attributes
 	public int health;
 	public int maxHealth;
 	public int tempHealth;
-
+	public float size = 1;
 }

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7nn2i2h0jncu"
-path="res://.godot/imported/blankMap.png-304dfae9a1a6a384fabab79e22023e0a.ctex"
+uid="uid://db4owkrq0s5yc"
+path="res://.godot/imported/kururin-kuru-kuru.png-139b520b18bdb59cfc0b2f5b9646b324.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://blankMap.png"
-dest_files=["res://.godot/imported/blankMap.png-304dfae9a1a6a384fabab79e22023e0a.ctex"]
+source_file="res://kururin-kuru-kuru.png"
+dest_files=["res://.godot/imported/kururin-kuru-kuru.png-139b520b18bdb59cfc0b2f5b9646b324.ctex"]
 
 [params]
 

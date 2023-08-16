@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" path="res://Player.cs" id="1_rcklq"]
 
-[node name="Player" type="Node2D"]
+[node name="Player" type="Node2D" node_paths=PackedStringArray("camera")]
 script = ExtResource("1_rcklq")
+camera = NodePath("Camera2D")
 
 [node name="Camera2D" type="Camera2D" parent="."]

@@ -30,6 +30,7 @@ public partial class Map : RightClickable
             image.OpenDialog();
         }
         Position = (Position / 100).Round() * 100;
+		image.AddImageSubmenu(this);
     }
 
     public void FindSize(string path)
@@ -51,15 +52,16 @@ public partial class Map : RightClickable
         return (image.WorldPointToPixel(worldPoint) / pixelsPerSquare).Floor();
     }
 
-    public override void _Draw()
+    public override void _Input(InputEvent _event)
     {
-        // Vector2 size = DisplayServer.WindowGetSize();
-        // for (int x = 0; x < size.X; x += 100) {
-        //     DrawLine(new Vector2(x, 0), new Vector2(x, size.Y), new Color(0, 255, 255));
-        // }
-        // for (int y = 0; y < size.Y; y += 100) {
-        //     DrawLine(new Vector2(0, y), new Vector2(size.X, y), new Color(0, 255, 255));
-        // }
+		if (image.MakeInputLocal(_event) is InputEventMouseButton mouseEvent) {
+            if (mouseEvent.ButtonIndex == MouseButton.Right) {
+				if (!image.IsPixelOpaque(mouseEvent.Position)) return;
+				menu.Position = (Vector2I)mouseEvent.GlobalPosition;
+				menu.Show();
+				GetViewport().SetInputAsHandled();
+			}
+		}
     }
 
     public void ImageLoaded()

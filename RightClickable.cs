@@ -33,6 +33,9 @@ public partial class RightClickable : Node2D
 public static class FunctionIDs
 {
 	public static int
+	// 0xx Entities
+	// 1xx Images
 	LoadImage = 100,
 	SyncImage = 101;
+	// 2xx Maps
 }

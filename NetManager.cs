@@ -7,11 +7,17 @@ public partial class NetManager : Node
     public ushort port = 7777;
     // [Export]
     // PackedScene playerScene;
+    LineEdit IPField;
+    LineEdit PortField;
 
     public override void _Ready()
     {
         ToSignal(GetNode("%MainMenu/%HostButton"), "pressed").OnCompleted(Host);
         ToSignal(GetNode("%MainMenu/%JoinButton"), "pressed").OnCompleted(Join);
+        IPField = GetNode("%MainMenu/%IPField") as LineEdit;
+        PortField = GetNode("%MainMenu/%PortField") as LineEdit;
+
+        IPField.FocusExited += IPEndEdit;
 
         if (!Multiplayer.IsServer()) return;
 
@@ -32,6 +38,26 @@ public partial class NetManager : Node
     //     Multiplayer.PeerConnected -= AddPlayer;
     //     Multiplayer.PeerDisconnected -= RemPlayer;
     // }
+
+#region TextFields
+    public void IPEndEdit()
+    {
+        if (IPField.Text.IsValidIPAddress()) {
+            IP = IPField.Text;
+        } else {
+            IPField.Text = IP;
+        }
+    }
+
+    public void PortEndEdit()
+    {
+        if (ushort.TryParse(PortField.Text, out ushort p) && p != 0) {
+            port = p;
+        } else {
+            PortField.Text = port.ToString();
+        }
+    }
+#endregion
 
     public void Host()
     {

@@ -43,3 +43,21 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "Connect"
+
+[node name="IPField" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "127.0.0.1"
+placeholder_text = "IP"
+max_length = 15
+expand_to_text_length = true
+
+[node name="PortField" type="LineEdit" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "7777"
+placeholder_text = "IP"
+max_length = 5
+expand_to_text_length = true

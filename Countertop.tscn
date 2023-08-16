@@ -9,21 +9,6 @@
 
 [node name="Player" parent="." instance=ExtResource("1_jw7s5")]
 
-[node name="MainMenu" parent="Player" instance=ExtResource("2")]
-unique_name_in_owner = true
-offset_left = -960.0
-offset_top = -540.0
-offset_right = -960.0
-offset_bottom = -540.0
-
-[node name="CountertopUI" parent="Player" instance=ExtResource("1")]
-unique_name_in_owner = true
-visible = false
-offset_left = -960.0
-offset_top = -540.0
-offset_right = -960.0
-offset_bottom = -540.0
-
 [node name="Maps" type="Node2D" parent="."]
 unique_name_in_owner = true
 
@@ -32,6 +17,19 @@ unique_name_in_owner = true
 [node name="NetManager" type="Node" parent="."]
 script = ExtResource("3")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="NetManager"]
+[node name="MapSpawner" type="MultiplayerSpawner" parent="NetManager"]
 _spawnable_scenes = PackedStringArray("res://Map.tscn")
 spawn_path = NodePath("../../Maps")
+
+[node name="EntitySpawner" type="MultiplayerSpawner" parent="NetManager"]
+_spawnable_scenes = PackedStringArray("res://entity.tscn")
+spawn_path = NodePath("../../Entities")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CountertopUI" parent="UI" instance=ExtResource("1")]
+unique_name_in_owner = true
+visible = false
+
+[node name="MainMenu" parent="UI" instance=ExtResource("2")]
+unique_name_in_owner = true
