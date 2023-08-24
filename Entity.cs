@@ -40,6 +40,7 @@ public partial class Entity : RightClickable
 				{
 					dragging = false;
 					if (!Input.IsKeyPressed(Key.Shift)) Position = Snap(Position);
+					Rpc("SetPos", Position);
 					GetViewport().SetInputAsHandled();
 				}
 			} else if (mouseEvent.ButtonIndex == MouseButton.Right) {
@@ -63,6 +64,12 @@ public partial class Entity : RightClickable
 		Vector2 radiusVec = (Scale.X / 2 + 0.5f) * Vector2.One;
 		return (((Position / 100) - radiusVec).Round() + radiusVec) * 100;
     }
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void SetPos(Vector2 pos)
+	{
+		Position = pos;
+	}
 
 	public override void _Notification(int what)
 	{
