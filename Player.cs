@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.ObjectModel;
 
 public partial class Player : Node2D
 {
@@ -11,11 +12,14 @@ public partial class Player : Node2D
     public float zoomSpeed = 1.1f;
     public Vector2 minZoom = 0.1f * Vector2.One;
     public Vector2 maxZoom = 20f * Vector2.One;
+    CanvasItem escMenu;
 
 	public override void _Ready()
 	{
         singleton = this;
         dragging = false;
+        Node UI = GetNode("/root/Countertop/UI");
+        escMenu = UI.GetNode("CountertopUI/EscMenu") as CanvasItem;
 	}
 
 	public override void _Process(double delta)
@@ -61,9 +65,16 @@ public partial class Player : Node2D
         }
         else
         {
-            if (_event is InputEventMouseMotion motionEvent && dragging)
-            {
+            if (_event is InputEventMouseMotion motionEvent && dragging) {
                 Position -= camera.GetViewportTransform().AffineInverse().BasisXform(motionEvent.Relative);
+            }
+            else if (_event is InputEventKey keyEvent && keyEvent.Pressed) {
+                switch (keyEvent.Keycode) {
+                    case Key.Escape:
+                        if (!keyEvent.Echo)
+                            escMenu.Visible = !escMenu.Visible;
+                        break;
+                }
             }
         }
     }
