@@ -35,11 +35,13 @@ public partial class NetImage : Sprite2D
 
         submenu.Name = "ImageSubmenu";
 
-        submenu.AddItem("Load", FunctionIDs.LoadImage);
-        clickable.actions.Add(FunctionIDs.LoadImage, OpenDialog);
-
-        submenu.AddItem("Sync", FunctionIDs.SyncImage);
-        clickable.actions.Add(FunctionIDs.SyncImage, () => RpcId(source, "RpcRequestImage", hash));
+        if (Multiplayer.IsServer()) {
+            submenu.AddItem("Load", FunctionIDs.LoadImage);
+            clickable.actions.Add(FunctionIDs.LoadImage, OpenDialog);
+        } else {
+            submenu.AddItem("Sync", FunctionIDs.SyncImage);
+            clickable.actions.Add(FunctionIDs.SyncImage, () => RpcId(source, "RpcRequestImage", hash));
+        }
 
         clickable.AddSubmenu("Image", submenu);
     }
