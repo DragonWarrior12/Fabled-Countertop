@@ -13,6 +13,7 @@ public partial class NetImage : Sprite2D
 {
     static SHA512 hasher = SHA512.Create();
     static Dictionary<string, UserImage> textures = new Dictionary<string, UserImage>();
+    static ColorPickerButton colourPicker;
     [Export]
     string hash;
     int source = 1;
@@ -23,6 +24,7 @@ public partial class NetImage : Sprite2D
 
     public override void _Ready()
     {
+        colourPicker = GetNode("/root/Countertop/UI/CountertopUI/ColourPicker") as ColorPickerButton;
         if (placeholder == null) return;
         Action removePlaceholder = () => placeholder.QueueFree();
         removePlaceholder += () => Loaded -= removePlaceholder;
@@ -38,6 +40,8 @@ public partial class NetImage : Sprite2D
         if (Multiplayer.IsServer()) {
             submenu.AddItem("Load", FunctionIDs.LoadImage);
             clickable.actions.Add(FunctionIDs.LoadImage, OpenDialog);
+            submenu.AddItem("Tint", FunctionIDs.TintImage);
+            clickable.actions.Add(FunctionIDs.TintImage, () => Rpc("RpcTintImage", colourPicker.Color));
         } else {
             submenu.AddItem("Sync", FunctionIDs.SyncImage);
             clickable.actions.Add(FunctionIDs.SyncImage, () => RpcId(source, "RpcRequestImage", hash));
@@ -98,6 +102,12 @@ public partial class NetImage : Sprite2D
         textures[hash].data = imageData;
         Texture = textures[hash].texture;
         Loaded?.Invoke();
+    }
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=true, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void RpcTintImage(Color color)
+    {
+        SelfModulate = color;
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=false, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]

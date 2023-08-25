@@ -30,6 +30,12 @@ text = "Spawn Entity"
 script = ExtResource("3_s5p1l")
 entity = ExtResource("4_krbwb")
 
+[node name="ColourPicker" type="ColorPickerButton" parent="."]
+layout_mode = 0
+offset_left = 194.0
+offset_right = 305.0
+offset_bottom = 31.0
+
 [node name="EscMenu" type="VBoxContainer" parent="."]
 visible = false
 layout_mode = 1

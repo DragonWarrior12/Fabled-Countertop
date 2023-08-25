@@ -36,6 +36,7 @@ public static class FunctionIDs
 	// 0xx Entities
 	// 1xx Images
 	LoadImage = 100,
-	SyncImage = 101;
+	SyncImage = 101,
+	TintImage = 102;
 	// 2xx Maps
 }
