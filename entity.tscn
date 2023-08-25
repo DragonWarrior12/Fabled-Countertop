@@ -56,16 +56,16 @@ animations = [{
 }]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mmk58"]
-properties/0/path = NodePath("Image:hash")
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/sync = false
-properties/1/path = NodePath("Image:scale")
+properties/1/path = NodePath("Image:hash")
 properties/1/spawn = true
 properties/1/sync = false
-properties/2/path = NodePath("Fog:scale")
+properties/2/path = NodePath("Image:scale")
 properties/2/spawn = true
 properties/2/sync = false
-properties/3/path = NodePath(".:position")
+properties/3/path = NodePath(".:scale")
 properties/3/spawn = true
 properties/3/sync = false
 
