@@ -34,10 +34,10 @@ public partial class Player : Node2D
         vp = new Rect2(trans.BasisXform(vp.Position), trans.BasisXform(vp.Size));
         vp.Position = (-vp.Size / 200).Floor() * 100 - Position.PosMod(100);
         vp.Size += 200 * Vector2.One;
-        for (int x = (int)vp.Position.X; x < vp.End.X; x += 100) {
+        for (float x = vp.Position.X; x < vp.End.X; x += 100) {
             DrawLine(new Vector2(x, vp.Position.Y), new Vector2(x, vp.End.Y), gridColour);
         }
-        for (int y = (int)vp.Position.Y; y < vp.End.Y; y += 100) {
+        for (float y = vp.Position.Y; y < vp.End.Y; y += 100) {
             DrawLine(new Vector2(vp.Position.X, y), new Vector2(vp.End.X, y), gridColour);
         }
     }
