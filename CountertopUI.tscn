@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjoy6sw1o3ar4"]
+[gd_scene load_steps=6 format=3 uid="uid://cjoy6sw1o3ar4"]
 
 [ext_resource type="Script" path="res://LoadMapButton.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://rjn5qt7k8ifk" path="res://Map.tscn" id="2"]
 [ext_resource type="Script" path="res://SpawnEntityButton.gd" id="3_s5p1l"]
 [ext_resource type="PackedScene" uid="uid://dfkski40c56ab" path="res://entity.tscn" id="4_krbwb"]
+[ext_resource type="PackedScene" uid="uid://ld13wff13xog" path="res://MapEditMenu.tscn" id="5_xb4rm"]
 
 [node name="CountertopUI" type="Control"]
 layout_mode = 3
@@ -35,6 +36,10 @@ layout_mode = 0
 offset_left = 194.0
 offset_right = 305.0
 offset_bottom = 31.0
+
+[node name="MapEditMenu" parent="." instance=ExtResource("5_xb4rm")]
+visible = false
+layout_mode = 1
 
 [node name="EscMenu" type="VBoxContainer" parent="."]
 visible = false

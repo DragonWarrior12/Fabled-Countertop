@@ -1,0 +1,128 @@
+[gd_scene load_steps=2 format=3 uid="uid://ld13wff13xog"]
+
+[ext_resource type="Script" path="res://MapEditMenu.cs" id="1_aujx4"]
+
+[node name="MapEditMenu" type="Panel" node_paths=PackedStringArray("pickOffset", "squareSize", "squareCount", "confirm", "offsetX", "offsetY", "squareField", "posX", "posY")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -122.5
+offset_right = 89.0
+offset_bottom = 122.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_aujx4")
+pickOffset = NodePath("VBoxContainer/OffsetLabel/OffsetButton")
+squareSize = NodePath("VBoxContainer/SquareLabel/SizeButton")
+squareCount = NodePath("VBoxContainer/SquareLabel/CountButton")
+confirm = NodePath("VBoxContainer/HBoxContainer/ConfirmButton")
+offsetX = NodePath("VBoxContainer/OffsetFields/X")
+offsetY = NodePath("VBoxContainer/OffsetFields/Y")
+squareField = NodePath("VBoxContainer/SquareFields/X")
+posX = NodePath("VBoxContainer/PosFields/X")
+posY = NodePath("VBoxContainer/PosFields/Y")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 174.0
+offset_bottom = 140.0
+
+[node name="OffsetLabel" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/OffsetLabel"]
+layout_mode = 2
+text = "Offset:"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/OffsetLabel"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OffsetButton" type="Button" parent="VBoxContainer/OffsetLabel"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Pick"
+
+[node name="OffsetFields" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="X" type="SpinBox" parent="VBoxContainer/OffsetFields"]
+layout_mode = 2
+allow_greater = true
+allow_lesser = true
+
+[node name="Y" type="SpinBox" parent="VBoxContainer/OffsetFields"]
+layout_mode = 2
+allow_greater = true
+allow_lesser = true
+
+[node name="SquareLabel" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/SquareLabel"]
+layout_mode = 2
+text = "Tile "
+vertical_alignment = 2
+
+[node name="SizeButton" type="Button" parent="VBoxContainer/SquareLabel"]
+layout_mode = 2
+text = "Size"
+
+[node name="Label2" type="Label" parent="VBoxContainer/SquareLabel"]
+layout_mode = 2
+text = "/"
+vertical_alignment = 2
+
+[node name="CountButton" type="Button" parent="VBoxContainer/SquareLabel"]
+layout_mode = 2
+text = "Count"
+
+[node name="Label3" type="Label" parent="VBoxContainer/SquareLabel"]
+layout_mode = 2
+text = ":"
+vertical_alignment = 2
+
+[node name="SquareFields" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="X" type="SpinBox" parent="VBoxContainer/SquareFields"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+value = 1.0
+allow_greater = true
+
+[node name="PosLabel" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/PosLabel"]
+layout_mode = 2
+text = "Position:"
+
+[node name="PosFields" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="X" type="SpinBox" parent="VBoxContainer/PosFields"]
+layout_mode = 2
+rounded = true
+allow_greater = true
+allow_lesser = true
+
+[node name="Y" type="SpinBox" parent="VBoxContainer/PosFields"]
+layout_mode = 2
+rounded = true
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Confirm"

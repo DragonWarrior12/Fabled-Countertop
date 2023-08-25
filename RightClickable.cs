@@ -8,7 +8,7 @@ public partial class RightClickable : Node2D
 	public PopupMenu menu;
 	public Dictionary<int, Action> actions = new Dictionary<int, Action>();
 
-	public override void _Ready()
+	public override void _EnterTree()
 	{
 		menu.IdPressed += ClickItem;
 	}
@@ -37,6 +37,7 @@ public static class FunctionIDs
 	// 1xx Images
 	LoadImage = 100,
 	SyncImage = 101,
-	TintImage = 102;
+	TintImage = 102,
 	// 2xx Maps
+	EditMap = 200;
 }
