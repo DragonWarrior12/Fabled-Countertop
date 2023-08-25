@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dfkski40c56ab"]
+[gd_scene load_steps=13 format=3 uid="uid://dfkski40c56ab"]
 
 [ext_resource type="Script" path="res://Entity.cs" id="1_hwk8h"]
 [ext_resource type="Texture2D" uid="uid://c7nn2i2h0jncu" path="res://blankMap.png" id="2_0atsg"]
@@ -55,6 +55,20 @@ animations = [{
 "speed": 18.0
 }]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mmk58"]
+properties/0/path = NodePath("Image:hash")
+properties/0/spawn = true
+properties/0/sync = false
+properties/1/path = NodePath("Image:scale")
+properties/1/spawn = true
+properties/1/sync = false
+properties/2/path = NodePath("Fog:scale")
+properties/2/spawn = true
+properties/2/sync = false
+properties/3/path = NodePath(".:position")
+properties/3/spawn = true
+properties/3/sync = false
+
 [node name="Entity" type="Node2D" node_paths=PackedStringArray("image", "menu")]
 script = ExtResource("1_hwk8h")
 image = NodePath("Image")
@@ -74,5 +88,8 @@ scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_hydss")
 autoplay = "default"
 centered = false
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_mmk58")
 
 [node name="PopupMenu" type="PopupMenu" parent="."]
