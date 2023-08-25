@@ -25,6 +25,9 @@ public partial class NetImage : Sprite2D
     public override void _Ready()
     {
         colourPicker = GetNode("/root/Countertop/UI/CountertopUI/ColourPicker") as ColorPickerButton;
+
+        if (hash != null) SetImage(hash);
+
         if (placeholder == null) return;
         Action removePlaceholder = () => placeholder.QueueFree();
         removePlaceholder += () => Loaded -= removePlaceholder;
@@ -126,21 +129,28 @@ public partial class NetImage : Sprite2D
     }
 
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void RpcSetImage(string hash)
+    public void RpcSetImage(string _hash)
     {
         if (Multiplayer.IsServer()) return;
 
-        if (textures.ContainsKey(hash)) {
-            Texture = textures[hash].texture;
+        SetImage(_hash);
+    }
+
+    public void SetImage(string _hash)
+    {
+        if (textures.ContainsKey(_hash)) {
+            Texture = textures[_hash].texture;
             Loaded?.Invoke();
             return;
         }
 
-        textures.Add(hash, new UserImage());
+        textures.Add(_hash, new UserImage());
         
-        Texture = textures[hash].texture;
+        Texture = textures[_hash].texture;
 
-        RpcId(1, "RpcRequestImage", hash);
+        hash = _hash;
+
+        RpcId(1, "RpcRequestImage", _hash);
     }
 }
 
