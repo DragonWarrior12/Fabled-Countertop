@@ -40,7 +40,7 @@ public partial class Entity : RightClickable
 				{
 					dragging = false;
 					if (!Input.IsKeyPressed(Key.Shift)) Position = Snap(Position);
-					Rpc("SetPos", Position);
+					Rpc("RpcSetPos", Position);
 					GetViewport().SetInputAsHandled();
 				}
 			} else if (mouseEvent.ButtonIndex == MouseButton.Right) {
@@ -66,7 +66,7 @@ public partial class Entity : RightClickable
     }
 
 	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
-	public void SetPos(Vector2 pos)
+	public void RpcSetPos(Vector2 pos)
 	{
 		Position = pos;
 	}
