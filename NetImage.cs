@@ -119,7 +119,7 @@ public partial class NetImage : Sprite2D
         Task.Run(() => { RpcId(Multiplayer.GetRemoteSenderId(), "RpcSendImage", hash, textures[hash].data); });
     }
 
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=false, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=false, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable, TransferChannel = 1)]
     public void RpcSendImage(string _hash, byte[] _data)
     {
         Task.Run(() => {
