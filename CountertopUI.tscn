@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cjoy6sw1o3ar4"]
+[gd_scene load_steps=7 format=3 uid="uid://cjoy6sw1o3ar4"]
 
 [ext_resource type="Script" path="res://LoadMapButton.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://rjn5qt7k8ifk" path="res://Map.tscn" id="2"]
 [ext_resource type="Script" path="res://SpawnEntityButton.gd" id="3_s5p1l"]
 [ext_resource type="PackedScene" uid="uid://dfkski40c56ab" path="res://entity.tscn" id="4_krbwb"]
 [ext_resource type="PackedScene" uid="uid://ld13wff13xog" path="res://MapEditMenu.tscn" id="5_xb4rm"]
+[ext_resource type="Script" path="res://ScaleMenu.cs" id="6_q0f8a"]
 
 [node name="CountertopUI" type="Control"]
 layout_mode = 3
@@ -40,6 +41,45 @@ offset_bottom = 31.0
 [node name="MapEditMenu" parent="." instance=ExtResource("5_xb4rm")]
 visible = false
 layout_mode = 1
+
+[node name="ScaleMenu" type="Panel" parent="." node_paths=PackedStringArray("confirm", "scaleBox")]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.0
+offset_top = -40.0
+offset_right = 45.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_q0f8a")
+confirm = NodePath("VBoxContainer/Button")
+scaleBox = NodePath("VBoxContainer/SpinBox")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScaleMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.5
+offset_top = -21.5
+offset_right = 33.5
+offset_bottom = 21.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SpinBox" type="SpinBox" parent="ScaleMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="ScaleMenu/VBoxContainer"]
+layout_mode = 2
+text = "Confirm"
 
 [node name="EscMenu" type="VBoxContainer" parent="."]
 visible = false

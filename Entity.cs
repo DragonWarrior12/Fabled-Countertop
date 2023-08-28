@@ -7,10 +7,19 @@ public partial class Entity : RightClickable
 	[Export]
 	NetImage image;
 	public Attributes attributes;
+	[Export]
+	public float size = 1;
+	ScaleMenu scaleMenu;
 
 	public override void _Ready()
 	{
 		attributes = new Attributes();
+
+		scaleMenu = GetNode("/root/Countertop/UI/CountertopUI/ScaleMenu") as ScaleMenu;
+
+        menu.AddItem("Scale", FunctionIDs.ScaleEnitity);
+        actions.Add(FunctionIDs.ScaleEnitity, () => scaleMenu.Open(this));
+
 		image.AddImageSubmenu(this);
 		image.Loaded += ScaleImage;
 	}
@@ -22,7 +31,7 @@ public partial class Entity : RightClickable
 
 	public void ScaleImage()
 	{
-		image.Scale = image.Texture.GetSize().Inverse() * 100 * attributes.size;
+		image.Scale = image.Texture.GetSize().Inverse() * 100 * size;
 	}
 
 	public override void _Input(InputEvent _event)
@@ -69,6 +78,13 @@ public partial class Entity : RightClickable
 	public void RpcSetPos(Vector2 pos)
 	{
 		Position = pos;
+	}
+
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
+	public void RpcSetScale(float scale)
+	{
+		size = scale;
+		ScaleImage();
 	}
 
 	public override void _Notification(int what)
