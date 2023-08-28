@@ -45,7 +45,8 @@ public partial class MapEditMenu : Panel
 	{
 		map.offset = new Vector2((float)offsetX.Value, (float)offsetY.Value);
 		map.squarePos = new Vector2I((int)posX.Value, (int)posY.Value);
-		map.Position = (map.squarePos * 100) - map.offset;
+
+		map.UpdatePos();
 	}
 
 	public void SquareChanged(double _)

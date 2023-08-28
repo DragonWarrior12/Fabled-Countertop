@@ -99,11 +99,22 @@ public partial class Map : RightClickable
         Rpc("RpcScale", image.Texture.GetSize() * scaleMultiplier, Vector2.One * scaleMultiplier);
     }
 
+    public void UpdatePos()
+    {
+		Rpc("RpcSetPos", (squarePos * 100) - offset);
+    }
+
     [Rpc (CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     void RpcScale(Vector2 fogScale, Vector2 imageScale)
     {
         fog.Scale = fogScale;
         image.Scale = imageScale;
+    }
+
+    [Rpc (CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    void RpcSetPos(Vector2 pos)
+    {
+        Position = pos;
     }
 
     public override void _Notification(int what)
