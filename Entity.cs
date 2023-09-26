@@ -1,20 +1,18 @@
 using Godot;
 using System;
+using Newtonsoft.Json.Linq;
 
 public partial class Entity : RightClickable
 {
     public bool dragging { get; private set;}
 	[Export]
 	NetImage image;
-	public Attributes attributes;
 	[Export]
 	public float size = 1;
 	ScaleMenu scaleMenu;
 
 	public override void _Ready()
 	{
-		attributes = new Attributes();
-
 		scaleMenu = GetNode("/root/Countertop/UI/CountertopUI/ScaleMenu") as ScaleMenu;
 
         menu.AddItem("Scale", FunctionIDs.ScaleEnitity);
@@ -49,7 +47,7 @@ public partial class Entity : RightClickable
 				{
 					dragging = false;
 					if (!Input.IsKeyPressed(Key.Shift)) Position = Snap(Position);
-					Rpc("RpcSetPos", Position);
+					MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetPos", Position); });
 					GetViewport().SetInputAsHandled();
 				}
 			} else if (mouseEvent.ButtonIndex == MouseButton.Right) {
@@ -92,13 +90,27 @@ public partial class Entity : RightClickable
 		if (what == Node.NotificationSceneInstantiated) Name = Guid.NewGuid().ToString();
 		base._Notification(what);
 	}
-}
 
-public partial class Attributes
-{
-	public string name;
-	public int health;
-	public int maxHealth;
-	public int tempHealth;
-	public float size = 1;
+    public JObject SaveJson()
+    {
+        return new JObject
+        {
+            { "Size", size },
+            { "Pos", JsonUtil.EncodeVector(Position) },
+            { "Image", image.SaveJson() }
+        };
+    }
+
+    public void LoadJson(JObject _data)
+    {
+        if (_data.ContainsKey("Pos")) {
+			MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetPos", JsonUtil.DecodeVector((string)_data["Pos"])); });
+        }
+        if (_data.ContainsKey("Size")) {
+            MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetScale", (float)_data["Size"]); });
+        }
+        if (_data.ContainsKey("Image")) {
+            image.LoadJson((JObject)_data["Image"]);
+        }
+    }
 }

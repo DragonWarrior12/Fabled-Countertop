@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 public partial class Map : RightClickable
 {
@@ -29,11 +30,11 @@ public partial class Map : RightClickable
     {
         image.Loaded += ImageLoaded;
         image.FileSelected += FindSize;
-        if (Multiplayer.IsServer()) {
+        if (NetManager.isServer) {
             fog.Color = new Color(0, 0, 0, 0.3f);
-            image.OpenDialog();
+            //image.OpenDialog();
+            Position = (Position / 100).Round() * 100;
         }
-        Position = (Position / 100).Round() * 100;
         
         mapEditMenu = GetNode("/root/Countertop/UI/CountertopUI/MapEditMenu") as MapEditMenu;
 
@@ -80,8 +81,6 @@ public partial class Map : RightClickable
 
     public void ImageLoaded()
     {
-        if (!Multiplayer.IsServer()) return;
-        
         Vector2 size = image.Texture.GetSize();
         if (xSquares > 0) {
             float xScale = size.X / xSquares;
@@ -96,25 +95,60 @@ public partial class Map : RightClickable
 
     public void UpdateScale()
     {
-        Rpc("RpcScale", image.Texture.GetSize() * scaleMultiplier, Vector2.One * scaleMultiplier);
+        MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcScale", image.Texture.GetSize() * scaleMultiplier, Vector2.One * scaleMultiplier); });
     }
 
     public void UpdatePos()
     {
-		Rpc("RpcSetPos", (squarePos * 100) - offset);
+		MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetPos", (squarePos * 100) - offset); });
     }
 
-    [Rpc (CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc (MultiplayerApi.RpcMode.AnyPeer, CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     void RpcScale(Vector2 fogScale, Vector2 imageScale)
     {
         fog.Scale = fogScale;
         image.Scale = imageScale;
     }
 
-    [Rpc (CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc (MultiplayerApi.RpcMode.AnyPeer, CallLocal=true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     void RpcSetPos(Vector2 pos)
     {
         Position = pos;
+    }
+
+    public JObject SaveJson()
+    {
+        return new JObject
+        {
+            { "Pos", JsonUtil.EncodeVector(squarePos) },
+            { "Offset", JsonUtil.EncodeVector(offset) },
+            { "PixelsPerSquare", pixelsPerSquare },
+            { "UseSize", useSize },
+            { "Image", image.SaveJson() }
+        };
+    }
+
+    public void LoadJson(JObject _data)
+    {
+        if (_data.ContainsKey("Pos")) {
+            squarePos = (Vector2I)JsonUtil.DecodeVector((string)_data["Pos"]);
+        }
+        if (_data.ContainsKey("Offset")) {
+            offset = JsonUtil.DecodeVector((string)_data["Offset"]);
+        }
+        UpdatePos();
+        if (_data.ContainsKey("PixelsPerSquare"))
+        {
+            pixelsPerSquare = (int)_data["PixelsPerSquare"];
+        }
+        UpdateScale();
+        if (_data.ContainsKey("UseSize"))
+        {
+            useSize = (bool)_data["UseSize"];
+        }
+        if (_data.ContainsKey("Image")) {
+            image.LoadJson((JObject)_data["Image"]);
+        }
     }
 
     public override void _Notification(int what)

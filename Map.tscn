@@ -8,15 +8,19 @@
 properties/0/path = NodePath("Image:hash")
 properties/0/spawn = true
 properties/0/sync = false
+properties/0/watch = false
 properties/1/path = NodePath(".:position")
 properties/1/spawn = true
 properties/1/sync = false
+properties/1/watch = false
 properties/2/path = NodePath("Image:scale")
 properties/2/spawn = true
 properties/2/sync = false
+properties/2/watch = false
 properties/3/path = NodePath("Fog:scale")
 properties/3/spawn = true
 properties/3/sync = false
+properties/3/watch = false
 
 [node name="Map" type="Node2D" node_paths=PackedStringArray("image", "fog", "menu")]
 script = ExtResource("1")

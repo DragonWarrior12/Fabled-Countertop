@@ -7,3 +7,4 @@ func _pressed():
 	var newMap = map.instantiate()
 	newMap.position = ($"/root/Countertop/Player" as Node2D).position
 	$"/root/Countertop/Maps".add_child(newMap, true)
+	newMap.image.OpenDialog()

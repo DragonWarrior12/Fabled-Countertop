@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://dakme7mbieaio"]
+[gd_scene load_steps=7 format=3 uid="uid://dakme7mbieaio"]
 
 [ext_resource type="PackedScene" uid="uid://cjoy6sw1o3ar4" path="res://CountertopUI.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://dpddrfmmywnni" path="res://player.tscn" id="1_jw7s5"]
 [ext_resource type="PackedScene" uid="uid://dtsa41icxl7px" path="res://MainMenu.tscn" id="2"]
 [ext_resource type="Script" path="res://NetManager.cs" id="3"]
+[ext_resource type="PackedScene" uid="uid://dfkski40c56ab" path="res://entity.tscn" id="5_ys5cs"]
+[ext_resource type="PackedScene" uid="uid://rjn5qt7k8ifk" path="res://Map.tscn" id="6_jcs75"]
 
 [node name="Countertop" type="Node2D"]
 
@@ -22,9 +24,12 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 
 [node name="Entities" type="Node2D" parent="."]
+unique_name_in_owner = true
 
 [node name="NetManager" type="Node" parent="."]
 script = ExtResource("3")
+EntityPrefab = ExtResource("5_ys5cs")
+MapPrefab = ExtResource("6_jcs75")
 
 [node name="MapSpawner" type="MultiplayerSpawner" parent="NetManager"]
 _spawnable_scenes = PackedStringArray("res://Map.tscn")

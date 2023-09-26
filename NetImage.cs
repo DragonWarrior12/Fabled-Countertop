@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Collections.Generic;
 
 using File = System.IO.File;
+using Newtonsoft.Json.Linq;
 
 public partial class NetImage : Sprite2D
 {
@@ -40,14 +41,14 @@ public partial class NetImage : Sprite2D
 
         submenu.Name = "ImageSubmenu";
 
-        if (Multiplayer.IsServer()) {
+        if (NetManager.isServer) {
             submenu.AddItem("Load", FunctionIDs.LoadImage);
             clickable.actions.Add(FunctionIDs.LoadImage, OpenDialog);
             submenu.AddItem("Tint", FunctionIDs.TintImage);
-            clickable.actions.Add(FunctionIDs.TintImage, () => Rpc("RpcTintImage", colourPicker.Color));
+            clickable.actions.Add(FunctionIDs.TintImage, () => MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcTintImage", colourPicker.Color); }));
         } else {
             submenu.AddItem("Sync", FunctionIDs.SyncImage);
-            clickable.actions.Add(FunctionIDs.SyncImage, () => RpcId(source, "RpcRequestImage", hash));
+            clickable.actions.Add(FunctionIDs.SyncImage, () => MainThreadInvoker.InvokeOnMainThread(() => { RpcId(source, "RpcRequestImage", hash); }));
         }
 
         clickable.AddSubmenu("Image", submenu);
@@ -55,12 +56,12 @@ public partial class NetImage : Sprite2D
 
     public async void OpenDialog()
     {
-        await Task.Run(() => {
-            string path = FileBrowser.OpenFile();
+        await Task.Run(async () => {
+            string path = FileBrowser.OpenFile().Result;
 
             FileSelected?.Invoke(path);
 
-            LoadFromFile(path.StripEdges());
+            await LoadFromFile(path);
         });
     }
 
@@ -69,7 +70,7 @@ public partial class NetImage : Sprite2D
         return (worldPoint - ((Node2D)GetParent()).Position + Texture.GetSize() * Scale / 2) / Scale;
     }
 
-    public async void LoadFromFile(string filePath)
+    public async Task LoadFromFile(string filePath)
     {
         if (!File.Exists(filePath)) return;
 
@@ -93,7 +94,11 @@ public partial class NetImage : Sprite2D
             await Task.Run(() => Load(data));
         }
 
+        textures[hash].path = filePath;
+        
         Rpc("RpcSetImage", hash);
+
+        MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetImage", hash); });
     }
 
     public void Load(byte[] imageData)
@@ -101,10 +106,13 @@ public partial class NetImage : Sprite2D
         Image image = new Image();
         image.LoadWebpFromBuffer(imageData);
         if (!textures.ContainsKey(hash)) textures[hash] = new UserImage();
-        textures[hash].texture.SetImage(image);
-        textures[hash].data = imageData;
-        Texture = textures[hash].texture;
-        Loaded?.Invoke();
+
+        MainThreadInvoker.InvokeOnMainThread(() => {
+            textures[hash].texture.SetImage(image);
+            textures[hash].data = imageData;
+            Texture = textures[hash].texture;
+            Loaded?.Invoke();
+        });
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=true, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -116,7 +124,7 @@ public partial class NetImage : Sprite2D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=false, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RpcRequestImage(string hash)
     {
-        Task.Run(() => { RpcId(Multiplayer.GetRemoteSenderId(), "RpcSendImage", hash, textures[hash].data); });
+        MainThreadInvoker.InvokeOnMainThread(() => { RpcId(Multiplayer.GetRemoteSenderId(), "RpcSendImage", hash, textures[hash].data); });
     }
 
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal=false, TransferMode=MultiplayerPeer.TransferModeEnum.Reliable, TransferChannel = 1)]
@@ -131,7 +139,7 @@ public partial class NetImage : Sprite2D
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void RpcSetImage(string _hash)
     {
-        if (Multiplayer.IsServer()) return;
+        if (NetManager.isServer) return;
 
         SetImage(_hash);
     }
@@ -150,7 +158,27 @@ public partial class NetImage : Sprite2D
 
         hash = _hash;
 
-        RpcId(1, "RpcRequestImage", _hash);
+        MainThreadInvoker.InvokeOnMainThread(() => { RpcId(1, "RpcRequestImage", _hash); });
+    }
+
+    public JObject SaveJson()
+    {
+        return new JObject
+        {
+            { "Path", textures[hash].path },
+            { "Tint", SelfModulate.ToHtml() }
+        };
+    }
+
+    public async void LoadJson(JObject _data)
+    {
+        if (_data.ContainsKey("Path") && _data["Path"].Type == JTokenType.String) {
+            string path = (string)_data["Path"];
+            await LoadFromFile(path);
+        }
+        if (_data.ContainsKey("Tint") && _data["Tint"].Type == JTokenType.String) {
+            SelfModulate = Color.FromHtml((string)_data["Tint"]);
+        }
     }
 }
 
@@ -158,6 +186,7 @@ public class UserImage
 {
     public ImageTexture texture;
     public byte[] data;
+    public string path;
 
     public UserImage()
     {
