@@ -1,28 +1,51 @@
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Godot;
+using Godot.NativeInterop;
 
 public static class FileBrowser
 {
-    public static string OpenFile()
+    private static Node dialog;
+    private static SignalAwaiter fileOpened;
+    private static SignalAwaiter canceled;
+
+    public static class filterPresets {
+        public static string[] json = new string[] { "*.json ; Json files" };
+    }
+
+    public static void SetDialogNode(Node _dialog)
     {
-        string command = @"Add-Type -AssemblyName System.Windows.Forms
-        $FileDialog = New-Object -Typename System.Windows.Forms.OpenFileDialog
-        [void]$FileDialog.ShowDialog()
-        $FileDialog.Filename";
+        dialog = _dialog;
+        fileOpened = dialog.ToSignal(dialog, "file_selected");
+        canceled = dialog.ToSignal(dialog, "canceled");
+    }
 
-        Process dialog = new Process();
+    public static async Task<string> OpenFile(string[] filters = null)
+    {
+        dialog.Set("file_mode", 0);
+        if (filters != null) dialog.Set("filters", filters);
 
-        dialog.StartInfo.FileName = "powershell.exe";
-        dialog.StartInfo.Arguments = command;
-        dialog.StartInfo.UseShellExecute = false;
-        dialog.StartInfo.CreateNoWindow = true;
-        dialog.StartInfo.RedirectStandardOutput = true;
+        dialog.Call("show");
 
-        dialog.Start();
+        Variant[] result = await fileOpened;
 
-        string path = dialog.StandardOutput.ReadToEnd();
-        dialog.WaitForExit();
-        return path;
+        GD.Print(result.Count());
+
+        return ((string)result[0]).StripEdges();
+    }
+
+    public static async Task<string> SaveFile(string[] filters = null)
+    {
+        dialog.Set("file_mode", 3);
+        if (filters != null) dialog.Set("filters", filters);
+
+        dialog.Call("show");
+
+        Variant[] result = await fileOpened;
+
+        return ((string)result[0]).StripEdges();
     }
 }

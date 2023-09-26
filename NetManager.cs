@@ -12,6 +12,8 @@ public partial class NetManager : Node
 
     public override void _Ready()
     {
+        FileBrowser.SetDialogNode(GetNode("NativeFileDialog"));
+
         ToSignal(GetNode("%MainMenu/%HostButton"), "pressed").OnCompleted(Host);
         ToSignal(GetNode("%MainMenu/%JoinButton"), "pressed").OnCompleted(Join);
         IPField = GetNode("%MainMenu/%IPField") as LineEdit;
