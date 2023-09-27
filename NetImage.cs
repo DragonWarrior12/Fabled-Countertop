@@ -95,8 +95,6 @@ public partial class NetImage : Sprite2D
         }
 
         textures[hash].path = filePath;
-        
-        Rpc("RpcSetImage", hash);
 
         MainThreadInvoker.InvokeOnMainThread(() => { Rpc("RpcSetImage", hash); });
     }
