@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using FileAccess = Godot.FileAccess;
 using File = System.IO.File;
+using SharpFileDialog;
 
 public partial class NetManager : Node
 {
@@ -20,8 +21,6 @@ public partial class NetManager : Node
 
     public override void _Ready()
     {
-        FileBrowser.SetDialogNode(GetNode("NativeFileDialog"));
-
         ToSignal(GetNode("%MainMenu/%HostButton"), "pressed").OnCompleted(Host);
         ToSignal(GetNode("%MainMenu/%JoinButton"), "pressed").OnCompleted(Join);
         (GetNode("/root/Countertop/UI/CountertopUI/EscMenu/ExitButton") as Button).Pressed += Leave;
@@ -152,16 +151,16 @@ public partial class NetManager : Node
 
         data.Add("Maps", maps);
 
-        File.WriteAllText(FileBrowser.SaveFile(filters: FileBrowser.filterPresets.json).Result, data.ToString());
+        if (!NativeFileDialog.OpenDialog(null, null, out string path)) return;
+
+        File.WriteAllText(path, data.ToString());
     }
 
     public void Load()
     {
-        JObject data = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(
-            File.ReadAllText(
-                FileBrowser.OpenFile(filters: FileBrowser.filterPresets.json).Result
-            )
-        );
+        if (!NativeFileDialog.OpenDialog(null, null, out string path)) return;
+
+        JObject data = Newtonsoft.Json.JsonConvert.DeserializeObject<JObject>(File.ReadAllText(path));
 
         if (data.ContainsKey("Entities") && data["Entities"] is JArray entities) {
             GD.Print("Ents");

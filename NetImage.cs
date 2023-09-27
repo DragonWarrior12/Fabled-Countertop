@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 using File = System.IO.File;
 using Newtonsoft.Json.Linq;
+using SharpFileDialog;
 
 public partial class NetImage : Sprite2D
 {
@@ -57,7 +58,7 @@ public partial class NetImage : Sprite2D
     public async void OpenDialog()
     {
         await Task.Run(async () => {
-            string path = FileBrowser.OpenFile(filters: FileBrowser.filterPresets.images).Result;
+            if (!NativeFileDialog.OpenDialog(null, null, out string path)) return;
 
             FileSelected?.Invoke(path);
 
