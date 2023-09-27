@@ -34,6 +34,7 @@ public partial class NetManager : Node
         IPField.FocusExited += IPEndEdit;
 
         Multiplayer.ServerDisconnected += OnDisconnect;
+        Multiplayer.ConnectionFailed += OnConnectFail;
 
         //if (!NetManager.isServer) return;
 
@@ -163,6 +164,7 @@ public partial class NetManager : Node
         );
 
         if (data.ContainsKey("Entities") && data["Entities"] is JArray entities) {
+            GD.Print("Ents");
             foreach (JObject ent in entities) {
                 MainThreadInvoker.InvokeOnMainThread(() => {
                     Entity temp = EntityPrefab.Instantiate() as Entity;
@@ -173,6 +175,7 @@ public partial class NetManager : Node
         }
 
         if (data.ContainsKey("Maps") && data["Maps"] is JArray maps) {
+            GD.Print("Maps");
             foreach (JObject map in maps) {
                 MainThreadInvoker.InvokeOnMainThread(() => {
                     Map temp = MapPrefab.Instantiate() as Map;
@@ -187,6 +190,12 @@ public partial class NetManager : Node
     {
 	    (GetNode("/root/Countertop/%MainMenu") as CanvasItem).Visible = false;
 	    (GetNode("/root/Countertop/%CountertopUI") as CanvasItem).Visible = true;
+    }
+
+    public void OnConnectFail()
+    {
+        Multiplayer.MultiplayerPeer = null;
+        OnDisconnect();
     }
 
     public void OnDisconnect()
