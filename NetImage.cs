@@ -57,7 +57,7 @@ public partial class NetImage : Sprite2D
     public async void OpenDialog()
     {
         await Task.Run(async () => {
-            string path = FileBrowser.OpenFile().Result;
+            string path = FileBrowser.OpenFile(filters: FileBrowser.filterPresets.images).Result;
 
             FileSelected?.Invoke(path);
 

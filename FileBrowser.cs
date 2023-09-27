@@ -13,7 +13,8 @@ public static class FileBrowser
     private static SignalAwaiter canceled;
 
     public static class filterPresets {
-        public static string[] json = new string[] { "*.json ; Json files" };
+        public static string[] json = new string[] { "*.json ; Json Files (*.json)", "*.* ; All Files (*.*)" };
+        public static string[] images = new string[] { "*.png, *.jpg, *.jpeg, *.qoi, *.bmp, *.gif, *.tiff, *.psd, *.webp ; Image Files (*.png, *.jpg, *.jpeg, *.qoi, *.bmp, *.gif, *.tiff, *.psd, *.webp)", "*.* ; All Files (*.*)" };
     }
 
     public static void SetDialogNode(Node _dialog)
@@ -26,7 +27,7 @@ public static class FileBrowser
     public static async Task<string> OpenFile(string[] filters = null)
     {
         dialog.Set("file_mode", 0);
-        if (filters != null) dialog.Set("filters", filters);
+        dialog.Set("filters", filters);
 
         dialog.Call("show");
 
@@ -40,7 +41,7 @@ public static class FileBrowser
     public static async Task<string> SaveFile(string[] filters = null)
     {
         dialog.Set("file_mode", 3);
-        if (filters != null) dialog.Set("filters", filters);
+        dialog.Set("filters", filters);
 
         dialog.Call("show");
 
