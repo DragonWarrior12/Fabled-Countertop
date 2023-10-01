@@ -28,12 +28,13 @@ public partial class NetImage : Sprite2D
     {
         colourPicker = GetNode("/root/Countertop/UI/CountertopUI/ColourPicker") as ColorPickerButton;
 
-        if (hash != null) SetImage(hash);
 
         if (placeholder == null) return;
-        Action removePlaceholder = () => placeholder.QueueFree();
+        Action removePlaceholder = () => { if (placeholder != null) placeholder.QueueFree(); };
         removePlaceholder += () => Loaded -= removePlaceholder;
         Loaded += removePlaceholder;
+
+        if (hash != "") SetImage(hash);
     }
 
     public void AddImageSubmenu(RightClickable clickable)
@@ -76,11 +77,10 @@ public partial class NetImage : Sprite2D
         if (!File.Exists(filePath)) return;
 
         byte[] data = await Task<byte[]>.Run(() => { return File.ReadAllBytes(filePath); });
-        GD.Print(data.Length);
         
         hash = hasher.ComputeHash(data).HexEncode();
 
-        if (textures.ContainsKey(hash)) { Texture = textures[hash].texture; Loaded?.Invoke(); }
+        if (textures.ContainsKey(hash)) MainThreadInvoker.InvokeOnMainThread(() => { Texture = textures[hash].texture; textures[hash].Loaded += Loaded.Invoke; Loaded?.Invoke(); });
         else {
             if (await Task<bool>.Run(() => { 
                 try {
@@ -107,10 +107,10 @@ public partial class NetImage : Sprite2D
         if (!textures.ContainsKey(hash)) textures[hash] = new UserImage();
 
         MainThreadInvoker.InvokeOnMainThread(() => {
-            textures[hash].texture.SetImage(image);
-            textures[hash].data = imageData;
             Texture = textures[hash].texture;
-            Loaded?.Invoke();
+            textures[hash].Loaded += Loaded.Invoke;
+            textures[hash].SetImage(image);
+            textures[hash].data = imageData;
         });
     }
 
@@ -147,6 +147,7 @@ public partial class NetImage : Sprite2D
     {
         if (textures.ContainsKey(_hash)) {
             Texture = textures[_hash].texture;
+            textures[hash].Loaded += Loaded.Invoke;
             Loaded?.Invoke();
             return;
         }
@@ -154,6 +155,8 @@ public partial class NetImage : Sprite2D
         textures.Add(_hash, new UserImage());
         
         Texture = textures[_hash].texture;
+
+        textures[hash].Loaded += Loaded.Invoke;
 
         hash = _hash;
 
@@ -183,9 +186,16 @@ public partial class NetImage : Sprite2D
 
 public class UserImage
 {
+    public Action Loaded;
     public ImageTexture texture;
     public byte[] data;
     public string path;
+
+    public void SetImage(Image _image)
+    {
+        texture.SetImage(_image);
+        Loaded?.Invoke();
+    }
 
     public UserImage()
     {
