@@ -15,28 +15,63 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LoadMap" type="Button" parent="."]
+[node name="ColourPicker" type="ColorPickerButton" parent="."]
 layout_mode = 0
-offset_right = 12.0
-offset_bottom = 20.0
+offset_right = 111.0
+offset_bottom = 31.0
+
+[node name="Draw" type="Button" parent="."]
+offset_left = 111.0
+offset_right = 161.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Draw"
+
+[node name="HostUI" type="Node" parent="."]
+
+[node name="Mark" type="Button" parent="HostUI"]
+offset_left = 161.0
+offset_right = 210.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Mark"
+
+[node name="Erase" type="Button" parent="HostUI"]
+offset_left = 210.0
+offset_right = 261.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Erase"
+
+[node name="LoadMap" type="Button" parent="HostUI"]
+offset_left = 370.0
+offset_right = 454.0
+offset_bottom = 31.0
 text = "Load Map"
 script = ExtResource("1")
 map = ExtResource("2")
 
-[node name="SpawnEntity" type="Button" parent="."]
-layout_mode = 0
-offset_left = 85.0
-offset_right = 169.0
+[node name="SpawnEntity" type="Button" parent="HostUI"]
+offset_left = 261.0
+offset_right = 370.0
 offset_bottom = 31.0
 text = "Spawn Entity"
 script = ExtResource("3_s5p1l")
 entity = ExtResource("4_krbwb")
 
-[node name="ColourPicker" type="ColorPickerButton" parent="."]
-layout_mode = 0
-offset_left = 194.0
-offset_right = 305.0
+[node name="AddFog" type="Button" parent="HostUI"]
+offset_left = 454.0
+offset_right = 524.0
 offset_bottom = 31.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Add Fog"
+
+[node name="ClearFog" type="Button" parent="HostUI"]
+offset_left = 524.0
+offset_right = 604.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Clear Fog"
 
 [node name="MapEditMenu" parent="." instance=ExtResource("5_xb4rm")]
 visible = false
