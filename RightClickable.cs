@@ -35,6 +35,9 @@ public static class FunctionIDs
 	public static int
 	// 0x Entities
 	ScaleEnitity = 00,
+	LockEntity = 01, // need to implement, synced bool allowing/disallowing client to move
+	DisableEntity = 02, // need to implement, image opacity based on bool + authority
+	DupeEntity = 03, // need to implement
 	// 1x Images
 	LoadImage = 10,
 	SyncImage = 11,
