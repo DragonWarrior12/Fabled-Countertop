@@ -28,7 +28,6 @@ public partial class NetImage : Sprite2D
     {
         colourPicker = GetNode("/root/Countertop/UI/CountertopUI/ColourPicker") as ColorPickerButton;
 
-
         if (placeholder == null) return;
         Action removePlaceholder = () => { if (placeholder != null) placeholder.QueueFree(); };
         removePlaceholder += () => Loaded -= removePlaceholder;
