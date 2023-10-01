@@ -38,9 +38,11 @@ public partial class Map : RightClickable
         
         mapEditMenu = GetNode("/root/Countertop/UI/CountertopUI/MapEditMenu") as MapEditMenu;
 
-        menu.AddItem("Edit", FunctionIDs.EditMap);
-        actions.Add(FunctionIDs.EditMap, () => mapEditMenu.Open(this));
-
+        if (NetManager.isServer) {
+            menu.AddItem("Edit", FunctionIDs.EditMap);
+            actions.Add(FunctionIDs.EditMap, () => mapEditMenu.Open(this));
+        }
+        
 		image.AddImageSubmenu(this);
     }
 

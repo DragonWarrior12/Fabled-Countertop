@@ -87,6 +87,7 @@ public partial class NetManager : Node
         if (peer.CreateServer(port) != Error.Ok) return;
         Multiplayer.MultiplayerPeer = peer;
         isServer = true;
+        (GetNode("/root/Countertop/UI/CountertopUI/HostUI") as CanvasItem).Visible = true;
         OnServerConnect();
     }
 
@@ -95,6 +96,7 @@ public partial class NetManager : Node
         ENetMultiplayerPeer peer = new ENetMultiplayerPeer();
         if (peer.CreateClient(IP, port) != Error.Ok) return;
         Multiplayer.MultiplayerPeer = peer;
+        (GetNode("/root/Countertop/UI/CountertopUI/HostUI") as CanvasItem).Visible = false;
         OnClientConnect();
     }
 

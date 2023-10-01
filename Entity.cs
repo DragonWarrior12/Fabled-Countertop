@@ -15,9 +15,11 @@ public partial class Entity : RightClickable
 	{
 		scaleMenu = GetNode("/root/Countertop/UI/CountertopUI/ScaleMenu") as ScaleMenu;
 
-        menu.AddItem("Scale", FunctionIDs.ScaleEnitity);
-        actions.Add(FunctionIDs.ScaleEnitity, () => scaleMenu.Open(this));
-
+		if (NetManager.isServer) {
+			menu.AddItem("Scale", FunctionIDs.ScaleEnitity);
+			actions.Add(FunctionIDs.ScaleEnitity, () => scaleMenu.Open(this));
+		}
+		
 		image.AddImageSubmenu(this);
 		image.Loaded += ScaleImage;
 	}
