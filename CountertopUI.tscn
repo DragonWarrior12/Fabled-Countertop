@@ -21,13 +21,15 @@ offset_right = 111.0
 offset_bottom = 31.0
 
 [node name="Draw" type="Button" parent="."]
+layout_mode = 0
 offset_left = 111.0
 offset_right = 161.0
 offset_bottom = 31.0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Draw"
 
-[node name="HostUI" type="Node" parent="."]
+[node name="HostUI" type="Control" parent="."]
+anchors_preset = 0
 
 [node name="Mark" type="Button" parent="HostUI"]
 offset_left = 161.0
